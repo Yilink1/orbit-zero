@@ -482,7 +482,7 @@ body::before {
 }
 
 /* ==================================
-   全新终局：新宿主正式面板样式 (死寂白灰配色)
+   全新终局：宿主正式面板样式 (死寂白灰配色)
 ================================== */
 #newHostContainer {
     display: none;
@@ -594,17 +594,37 @@ body.ending-override-green::after {
     z-index: 1000000;
 }
 
-/* 手机端响应式适配修补 */
-@media screen and (max-width: 500px) {
+/* ==================================
+   新增：移动端自适应优化
+================================== */
+@media screen and (max-width: 600px) {
+    /* 将双列卡片改为单列，避免文字被挤压 */
     .grid-2 {
-        gap: 10px;
+        grid-template-columns: 1fr;
     }
+    
+    /* 缩小卡片内边距，给小屏幕留出更多空间 */
     .card {
         padding: 15px;
-        margin: 15px 0;
+    }
+
+    /* 适当缩小大标题和巨型数字的字号，防止溢出 */
+    .hero h1 {
+        font-size: 26px;
     }
     .big {
-        font-size: 38px;
+        font-size: 46px;
+    }
+    
+    /* 调整“深夜潜伏”等三列布局为更紧凑的排版 */
+    #mutator-desc + div {
+        flex-direction: column;
+        gap: 15px;
+    }
+    #mutator-desc + div > div:nth-child(2) {
+        /* 将中间的竖线改为横线 */
+        width: 100% !important; 
+        height: 1px; 
     }
 }
 </style>
@@ -629,9 +649,9 @@ body.ending-override-green::after {
         <span id="morseFreqText">[FREQ: 439.9Hz // MORSE: ... --- ...]</span>
     </div>
 
-    <!-- 加上了 flex-wrap: wrap 允许正常折行显示 -->
-    <p style="margin-top: 15px; display: flex; justify-content: center; flex-wrap: wrap; gap: 10px;">
-        <span>监视始于: <span class="phantom-target" id="monitorStartDate">2025-06-14</span></span>
+    <!-- 修复：加入 flex-wrap 和 span 的 nowrap 防止日期断行错位 -->
+    <p style="margin-top: 15px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+        <span style="white-space: nowrap;">监视始于: <span class="phantom-target" id="monitorStartDate">2025-06-14</span></span>
         <span style="color:#ff3300;">|</span>
         <span>当前状态: <span class="redacted" id="statusText">精神污染扩散中</span></span>
     </p>
