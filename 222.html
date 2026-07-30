@@ -482,7 +482,7 @@ body::before {
 }
 
 /* ==================================
-   全新终局：新宿主正式面板样式 (死寂白灰配色)
+   全新终局：宿主正式面板样式 (死寂白灰配色)
 ================================== */
 #newHostContainer {
     display: none;
@@ -593,20 +593,6 @@ body.ending-override-green::after {
     pointer-events: none;
     z-index: 1000000;
 }
-
-/* 手机端响应式适配修补 */
-@media screen and (max-width: 500px) {
-    .grid-2 {
-        gap: 10px;
-    }
-    .card {
-        padding: 15px;
-        margin: 15px 0;
-    }
-    .big {
-        font-size: 38px;
-    }
-}
 </style>
 </head>
 
@@ -629,8 +615,7 @@ body.ending-override-green::after {
         <span id="morseFreqText">[FREQ: 439.9Hz // MORSE: ... --- ...]</span>
     </div>
 
-    <!-- 加上了 flex-wrap: wrap 允许正常折行显示 -->
-    <p style="margin-top: 15px; display: flex; justify-content: center; flex-wrap: wrap; gap: 10px;">
+    <p style="margin-top: 15px; display: flex; justify-content: center; gap: 10px;">
         <span>监视始于: <span class="phantom-target" id="monitorStartDate">2025-06-14</span></span>
         <span style="color:#ff3300;">|</span>
         <span>当前状态: <span class="redacted" id="statusText">精神污染扩散中</span></span>
