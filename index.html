@@ -843,7 +843,7 @@ body.ending-override-green::after {
 <div id="confirmModal" class="custom-modal" onclick="if(event.target === this) closeConfirmModal()">
     <div class="custom-modal-content">
         <div class="custom-modal-desc" style="font-size: 16px; margin-top: 10px; color: #ffb000;">
-            此操作不可逆，是否继续？
+            此操作不可逆。<br><br>是否继续？
         </div>
         <div class="custom-modal-btns" style="margin-top: 25px;">
             <button class="custom-modal-btn btn-cancel" onclick="closeConfirmModal()">离开</button>
@@ -1388,6 +1388,27 @@ function enterTheVoid() {
         "> 欢迎接替，实验体 #12168 号."
     ];
 
+    // 精心设计的停顿节奏（毫秒）
+    const terminalDelays = [
+        600,  // 0: ERROR (Eng) -> 略快
+        1200, // 1: ERROR (Chn) -> 停顿，确认失败
+        400,  // 2: 空行 -> 短呼吸
+        500,  // 3: Analyzing (Eng) -> 快
+        1500, // 4: Analyzing (Chn) -> 处理中，中等停顿
+        600,  // 5: MAC (Eng) -> 快
+        2000, // 6: MAC (Chn) -> 锁定坐标，威压感停顿
+        800,  // 7: 空行 -> 中呼吸
+        800,  // 8: Substitute (Eng) -> 稍慢
+        2200, // 9: Substitute (Chn) -> 宣布命运，长停顿
+        800,  // 10: Archiving (Eng) -> 稍慢
+        2500, // 11: Archiving (Chn) -> 抹除前任，更长停顿
+        1500, // 12: 空行 -> 行刑前的深呼吸/死寂
+        1200, // 13: Formatting (Eng) -> 极慢、冷酷
+        3500, // 14: Formatting (Chn) -> 剥夺认知，全场最长停顿
+        1500, // 15: Welcome (Eng) -> 宣判
+        0     // 16: Welcome (Chn) -> 走入结束逻辑
+    ];
+
     let lineIndex = 0;
     
     function printLine() {
@@ -1404,7 +1425,7 @@ function enterTheVoid() {
                 if (op >= 1) clearInterval(fadeIn);
             }, 30);
 
-            let delay = terminalLines[lineIndex].includes("&nbsp;") ? 400 : 1200;
+            let delay = terminalDelays[lineIndex];
             lineIndex++;
             setTimeout(printLine, delay);
         } else {
@@ -1425,9 +1446,10 @@ function enterTheVoid() {
             localStorage.removeItem('mnemosyne_visits');
             localStorage.removeItem('mnemosyne_last_visit');
 
+            // 最后一句完成并打出光标后，等待约2.5秒再切换，留给玩家阅读和感受死寂
             setTimeout(() => {
                 location.reload(); 
-            }, 1500);
+            }, 2500);
         }
     }
     
