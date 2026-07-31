@@ -18,41 +18,6 @@
 html {
     overflow-x: hidden;
 }
-
-/* =========================================
-   新增：轻微 CRT 波动、扫描线漂移、显示器呼吸
-   ========================================= */
-@keyframes crtFlicker {
-    0%,100% { opacity: 0.92; }
-    18% { opacity: 0.91; }
-    19% { opacity: 0.93; }
-    47% { opacity: 0.89; }
-    48% { opacity: 0.93; }
-    73% { opacity: 0.90; }
-    74% { opacity: 0.92; }
-    95% { opacity: 0.88; }
-    96% { opacity: 0.92; }
-}
-
-@keyframes scanlineMove {
-    from {
-        background-position: 0 0, 0 0;
-    }
-    to {
-        background-position: 0 3px, 0 0;
-    }
-}
-
-@keyframes monitorGlow {
-    0%,
-    100% {
-        filter: brightness(1);
-    }
-    50% {
-        filter: brightness(1.006);
-    }
-}
-
 body {
     margin: 0;
     padding: 20px;
@@ -75,10 +40,6 @@ body::before {
     z-index: 99999;
     background-size: 100% 3px, 3px 100%;
     pointer-events: none;
-    /* 电流波动与扫描线缓慢漂移 */
-    animation: 
-        crtFlicker 8s infinite,
-        scanlineMove 18s linear infinite;
 }
 
 .container {
@@ -86,8 +47,6 @@ body::before {
     margin: auto;
     position: relative;
     z-index: 2;
-    /* 将显示器呼吸感转移到这里，防止污染 body 导致 fixed 弹窗定位失效 */
-    animation: monitorGlow 12s ease-in-out infinite;
 }
 
 /* 动态精神污染警告横幅 */
