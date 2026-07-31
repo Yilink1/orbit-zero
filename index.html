@@ -1006,11 +1006,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (remainingTime <= 0) {
             alert("[ 系统警告：检测到当前终端越权访问,神经隔离舱已永久锁定 ]");
+            localStorage.setItem('mnemosyne_just_locked', 'true'); // 标记：本次访问已在 infected 阶段计过数
             localStorage.setItem('mnemosyne_status', 'locked');
             location.reload();
         } else {
             setTimeout(() => {
                 alert("[ 系统警告：检测到当前终端越权访问,神经隔离舱已永久锁定 ]");
+                localStorage.setItem('mnemosyne_just_locked', 'true');
                 localStorage.setItem('mnemosyne_status', 'locked');
                 location.reload();
             }, remainingTime);
@@ -1029,8 +1031,14 @@ function initLockedHostProfile() {
     fillHostSpecsForDashboard();
 
     // 访问次数持久化自增
-    let lockedVisits = parseInt(localStorage.getItem('mnemosyne_locked_visits') || '0') + 1;
-    localStorage.setItem('mnemosyne_locked_visits', lockedVisits);
+    // 若是刚从 infected 阶段跳转过来的这一次，locked_visits 已经在那边加过了，这里跳过一次，避免重复计数
+    let lockedVisits = parseInt(localStorage.getItem('mnemosyne_locked_visits') || '0');
+    if (localStorage.getItem('mnemosyne_just_locked') === 'true') {
+        localStorage.removeItem('mnemosyne_just_locked');
+    } else {
+        lockedVisits += 1;
+        localStorage.setItem('mnemosyne_locked_visits', lockedVisits);
+    }
     document.getElementById('dashVisitCount').innerText = `${lockedVisits} 次访问（永久归档）`;
 
     // 如果访问次数达到 6 次及以上，且未被用户点X关闭，则在下方显示重玩提示框
@@ -1287,6 +1295,7 @@ function resetMemory() {
     localStorage.removeItem('mnemosyne_start_date');
     localStorage.removeItem('mnemosyne_prompt_dismissed');
     localStorage.removeItem('mnemosyne_expire_time');
+    localStorage.removeItem('mnemosyne_just_locked');
     alert("记忆已强制格式化。系统正在恢复初始纯净状态...");
     location.reload();
 }
@@ -1304,6 +1313,11 @@ const staringTexts = [
 ];
 
 function resetIdleTimer() {
+    // 已进入锁定态（新宿主面板）后，旧的静止惩罚不再适用，直接跳过
+    if (localStorage.getItem('mnemosyne_status') === 'locked') {
+        clearTimeout(idleTimer);
+        return;
+    }
     clearTimeout(idleTimer);
     if (staringOverlay.style.display === 'flex') {
         staringOverlay.style.display = 'none';
@@ -1314,11 +1328,14 @@ function resetIdleTimer() {
     }, 40000); 
 }
 
-window.addEventListener('mousemove', resetIdleTimer);
-window.addEventListener('keydown', resetIdleTimer);
-window.addEventListener('scroll', resetIdleTimer);
-window.addEventListener('touchstart', resetIdleTimer);
-resetIdleTimer();
+// 锁定态直接不注册静止惩罚监听，减少不必要的事件开销
+if (localStorage.getItem('mnemosyne_status') !== 'locked') {
+    window.addEventListener('mousemove', resetIdleTimer);
+    window.addEventListener('keydown', resetIdleTimer);
+    window.addEventListener('scroll', resetIdleTimer);
+    window.addEventListener('touchstart', resetIdleTimer);
+    resetIdleTimer();
+}
 
 let sharedAudioCtx = null;
 function playCreepyTone() {
