@@ -370,7 +370,7 @@ body::before {
 .wipe-btn {
     background: #ff3300;
     color: #000;
-    border: none;
+    border: 2px solid #ff3300; /* 增强硬朗清度边框 */
     padding: 15px 30px;
     font-weight: bold;
     font-size: 16px;
@@ -379,9 +379,11 @@ body::before {
     margin-top: 30px;
     box-shadow: 0 0 20px rgba(255, 51, 0, 0.6);
     transition: 0.2s;
+    display: inline-block;
 }
 .wipe-btn:hover {
     background: #fff;
+    border-color: #fff;
     box-shadow: 0 0 30px #fff;
 }
 
@@ -620,6 +622,10 @@ body.ending-override-green::after {
     }
     .wipe-btn {
         margin-top: 18px; /* 手机端让按钮距上方文字稍微近一点点 */
+        width: 90%; /* 宽度调整为约 90%，增强压迫感 */
+        margin-left: auto;
+        margin-right: auto;
+        padding: 14px 12px;
     }
 }
 </style>
@@ -1432,10 +1438,10 @@ function enterTheVoid() {
             lineIndex++;
             setTimeout(printLine, delay);
         } else {
-            // 使用原生实体字符，在手机和电脑端都能完美渲染闪烁光标
+            // 使用原生实体字符（左半块），在手机和电脑端都能完美渲染瘦长的终端光标
             const cursorLine = document.createElement('div');
             cursorLine.style.opacity = '1';
-            cursorLine.innerHTML = "> <span class='void-cursor' style='display: inline-block; color: #00ff00; animation: blinkCursor 0.8s infinite;'>&#9608;</span>";
+            cursorLine.innerHTML = "> <span class='void-cursor' style='display: inline-block; color: #00ff00; animation: blinkCursor 0.8s infinite;'>&#9612;</span>";
             voidContent.appendChild(cursorLine);
             
             // 自动将最新光标滚动到可视区域（防止手机端遮挡）
