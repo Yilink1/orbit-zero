@@ -321,6 +321,7 @@ body::before {
     top: 0; left: 0; width: 100%; height: 100%;
     background: #110202;
     color: #ff3300;
+    text-shadow: none;
     z-index: 100000;
     padding: 40px;
     font-family: monospace;
@@ -328,6 +329,15 @@ body::before {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+#memoryWipeScreen::after {
+    content: " ";
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
+    background-size: 100% 3px;
+    z-index: 100001;
+    pointer-events: none;
 }
 
 .wipe-avatar-container {
@@ -593,40 +603,6 @@ body.ending-override-green::after {
     pointer-events: none;
     z-index: 1000000;
 }
-
-/* ==================================
-   新增：移动端自适应优化
-================================== */
-@media screen and (max-width: 600px) {
-    /* 将双列卡片改为单列，避免文字被挤压 */
-    .grid-2 {
-        grid-template-columns: 1fr;
-    }
-    
-    /* 缩小卡片内边距，给小屏幕留出更多空间 */
-    .card {
-        padding: 15px;
-    }
-
-    /* 适当缩小大标题和巨型数字的字号，防止溢出 */
-    .hero h1 {
-        font-size: 26px;
-    }
-    .big {
-        font-size: 46px;
-    }
-    
-    /* 调整“深夜潜伏”等三列布局为更紧凑的排版 */
-    #mutator-desc + div {
-        flex-direction: column;
-        gap: 15px;
-    }
-    #mutator-desc + div > div:nth-child(2) {
-        /* 将中间的竖线改为横线 */
-        width: 100% !important; 
-        height: 1px; 
-    }
-}
 </style>
 </head>
 
@@ -649,9 +625,8 @@ body.ending-override-green::after {
         <span id="morseFreqText">[FREQ: 439.9Hz // MORSE: ... --- ...]</span>
     </div>
 
-    <!-- 修复：加入 flex-wrap 和 span 的 nowrap 防止日期断行错位 -->
-    <p style="margin-top: 15px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
-        <span style="white-space: nowrap;">监视始于: <span class="phantom-target" id="monitorStartDate">2025-06-14</span></span>
+    <p style="margin-top: 15px; display: flex; justify-content: center; gap: 10px;">
+        <span>监视始于: <span class="phantom-target" id="monitorStartDate">2025-06-14</span></span>
         <span style="color:#ff3300;">|</span>
         <span>当前状态: <span class="redacted" id="statusText">精神污染扩散中</span></span>
     </p>
@@ -687,16 +662,15 @@ body.ending-override-green::after {
 
 <div class="card">
     <h2>🎯 认知领域专注度</h2>
-    <div class="desc" style="font-size: 13px; margin-bottom: 10px;">你的数字足迹在哪些禁忌领域留下了印记？</div>
-    <div class="chart-container" style="height: 220px; position: relative;" id="chartContainer1">
+    <div class="desc" style="font-size: 13px; margin-bottom: 10px;">你的数字足迹 in 哪些禁忌领域留下了印记？</div>
+    <div class="chart-container" style="height: 220px;" id="chartContainer1">
         <canvas id="doughnutChart"></canvas>
-        <div id="doughnutHello" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; font-size: 28px; color: #ffb000; font-family: 'Courier New'; font-weight: bold; text-shadow: 0 0 10px rgba(255,176,0,0.5); pointer-events: none;">HELLO</div>
     </div>
 </div>
 
 <div class="card">
     <h2>⏰ 24小时精神波动雷达</h2>
-    <div class="chart-container" style="height: 250px;" id="chartContainer2">
+    <div class="chart-container" id="chartContainer2">
         <canvas id="timeChart"></canvas>
     </div>
 </div>
@@ -726,7 +700,7 @@ body.ending-override-green::after {
         <div class="classified-node">
             <div class="node-time">PHASE 04 // 2026.03 - 2026.05</div>
             <div class="node-title">记忆外包与算力依赖</div>
-            <div class="node-desc">目标编写自律代理（AstrBot）,将日常对话,思考与长期记忆交由多路大模型托管。<b>（监控记录：目标自主意识活动占比持续降低,大脑逻辑被 API 返回接管。）</b></div>
+            <div class="node-desc">目标编写自律代理（AstrBot）,将日常对话、思考与长期记忆交由多路大模型托管。<b>（监控记录：目标自主意识活动占比持续降低，大脑逻辑被 API 返回接管。）</b></div>
         </div>
 
         <div class="classified-node">
@@ -739,7 +713,7 @@ body.ending-override-green::after {
 
 <div class="card" id="warningWipeCard" style="border-color: #ff3300; background: rgba(255, 51, 0, 0.03);">
     <h3 style="color: #ff3300; margin-top: 0;">⚠️ 安全警告：精神污染度超标</h3>
-    <p style="font-size: 13px; color: #cca300; line-height: 1.6;">监视系统检测到你已经凝视屏幕过久。如果继续留在这里,你的真实记忆可能会与这串代码发生不可逆的耦合。</p>
+    <p style="font-size: 13px; color: #cca300; line-height: 1.6;">监视系统检测到你已经凝视屏幕过久。如果继续留在这里，你的真实记忆可能会与这串代码发生不可逆的耦合。</p>
     <button class="wipe-btn" onclick="triggerMemoryWipe()">[ 立即执行神经格式化 / PURGE ]</button>
 </div>
 
@@ -839,33 +813,21 @@ body.ending-override-green::after {
     <h2 style="color: #ff3300; font-size: 20px; text-shadow: 0 0 10px red;">*** 神经元格式化中：生物特征已锁定 ***</h2>
     <p style="margin-top: 15px; line-height: 1.8; color: #ffb000; font-size: 13px; max-width: 480px;">
         [ 0x0000FF04 ] 正在强行剥离宿主精神残留...<br>
-        [ 0x00001216 ] 正在切断与现实世界的最后一条网关。<br><br>
-        <span style="color: #fff; font-weight: bold;">宿主意识已离线。</span>
+        [ 0x00000404 ] 目标面部特征与浏览记录已被永久封存。<br>
+        [ 0x00001216 ] 正在切断与现实世界的最后一条路由网关。<br><br>
+        <span style="color: #fff; font-weight: bold;">宿主意识已离线。你不是 Yilink。你什么都不是。</span>
     </p>
 </div>
 
 <!-- 底部气泡通知 DOM -->
-<div id="toast-notification">正在绕过安全网关,前往主页……</div>
-
-<!-- 格式化确认弹窗 (无警告标题) -->
-<div id="confirmModal" class="custom-modal" onclick="if(event.target === this) closeConfirmModal()">
-    <div class="custom-modal-content">
-        <div class="custom-modal-desc" style="font-size: 16px; margin-top: 10px; color: #ffb000;">
-            此操作不可逆，确认执行吗？
-        </div>
-        <div class="custom-modal-btns" style="margin-top: 25px;">
-            <button class="custom-modal-btn btn-cancel" onclick="closeConfirmModal()">取消</button>
-            <button class="custom-modal-btn btn-confirm" style="background: #ff3300; border-color: #ff3300; color: #000;" onclick="confirmMemoryWipe()">确认执行</button>
-        </div>
-    </div>
-</div>
+<div id="toast-notification">正在绕过安全网关，前往主页……</div>
 
 <!-- 专属提示弹窗结构 (果了个果) -->
 <div id="projectModal" class="custom-modal" onclick="if(event.target === this) closeProjectModal()">
     <div class="custom-modal-content">
         <div class="custom-modal-title">✨ 内部传输提示</div>
         <div class="custom-modal-desc">
-            这是受监管的内部节点 <span>「果了个果」</span>,安全等级符合规范,请放心访问。
+            这是受监管的内部节点 <span>「果了个果」</span>，安全等级符合规范，请放心访问。
         </div>
         <div class="custom-modal-btns">
             <button class="custom-modal-btn btn-cancel" onclick="closeProjectModal()">留在这里</button>
@@ -904,22 +866,13 @@ body.ending-override-green::after {
         </div>
 
         <div class="dash-card">
-            <div class="dash-title">02 // 当前系统访问次数</div>
+            <div class="dash-title">02 // 当前会话精神脉冲</div>
             <div class="dash-value" id="dashVisitCount">1 次访问（永久归档）</div>
         </div>
 
         <div class="dash-card">
             <div class="dash-title">03 // 模块控制权限</div>
             <div class="dash-value" style="color: #ef4444; font-size: 14px;">[ 访问权限：已被系统全局只读锁定 ]</div>
-        </div>
-
-        <!-- 6次访问后在页面下方显示的重玩提示框 -->
-        <div id="replayPromptBox" style="display: none; background: rgba(16, 185, 129, 0.05); border: 1px solid #10b981; padding: 15px; margin-top: 30px; text-align: center; border-radius: 4px; position: relative;">
-            <div style="color: #10b981; margin-bottom: 10px; font-weight: bold;">想要重玩一次吗喵？</div>
-            <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
-                <button onclick="resetMemory()" class="custom-modal-btn btn-confirm" style="background: #10b981; border-color: #10b981; color: #000; flex: 0 0 auto; padding: 8px 20px;">[ 重置并重新开始 ]</button>
-                <button onclick="closeReplayPrompt()" style="background: transparent; border: 1px solid #6b7280; color: #9ca3af; padding: 8px 12px; cursor: pointer; font-family: monospace;">✕</button>
-            </div>
         </div>
 
         <div style="text-align: center; margin-top: 40px; color: #4b5563; font-size: 12px;">
@@ -954,25 +907,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         applyInfectedDataToMainPage(currentVisits);
 
-        // 倒计时持久化逻辑：不因刷新而重置（总时长15秒，通过绝对时间戳控制，不清空）
-        let expireTime = localStorage.getItem('mnemosyne_expire_time');
-        if (!expireTime) {
-            expireTime = new Date().getTime() + 15000;
-            localStorage.setItem('mnemosyne_expire_time', expireTime);
-        }
-        let remainingTime = parseInt(expireTime) - new Date().getTime();
-        
-        if (remainingTime <= 0) {
-            alert("[ 系统警告：检测到当前终端越权访问,神经隔离舱已永久锁定 ]");
+        // 15秒后显示越权访问警告，并固化为 locked 状态，直接跳转到宿主正式面板
+        setTimeout(() => {
+            alert("[ 系统警告：检测到当前终端越权访问，神经隔离舱已永久锁定 ]");
             localStorage.setItem('mnemosyne_status', 'locked');
             location.reload();
-        } else {
-            setTimeout(() => {
-                alert("[ 系统警告：检测到当前终端越权访问,神经隔离舱已永久锁定 ]");
-                localStorage.setItem('mnemosyne_status', 'locked');
-                location.reload();
-            }, remainingTime);
-        }
+        }, 15000);
         return;
     }
 });
@@ -990,16 +930,6 @@ function initLockedHostProfile() {
     let lockedVisits = parseInt(localStorage.getItem('mnemosyne_locked_visits') || '0') + 1;
     localStorage.setItem('mnemosyne_locked_visits', lockedVisits);
     document.getElementById('dashVisitCount').innerText = `${lockedVisits} 次访问（永久归档）`;
-
-    // 如果访问次数达到 6 次及以上，且未被用户点X关闭，则在下方显示重玩提示框
-    if (lockedVisits >= 6 && localStorage.getItem('mnemosyne_prompt_dismissed') !== 'true') {
-        document.getElementById('replayPromptBox').style.display = 'block';
-    }
-}
-
-function closeReplayPrompt() {
-    document.getElementById('replayPromptBox').style.display = 'none';
-    localStorage.setItem('mnemosyne_prompt_dismissed', 'true');
 }
 
 function fillHostSpecsForDashboard() {
@@ -1075,9 +1005,9 @@ function applyInfectedDataToMainPage(currentVisits) {
     document.getElementById('chartContainer1').innerHTML = '<div style="color: #6b7280; padding: 40px; text-align: center;">[ 认知领域数据正在持续监测中 ]</div>';
     document.getElementById('chartContainer2').innerHTML = '<div style="color: #6b7280; padding: 40px; text-align: center;">[ 24小时波动记录正在持续监测中 ]</div>';
 
-    // 清空历史最高精神负荷、核心监视阵地（仅保留 https://12168.yilink.uk/ 且次数同步）、禁忌兴趣图谱的内容，只留标题和空方框
+    // 清空历史最高精神负荷、核心监视阵地、禁忌兴趣图谱的内容，只留标题和空方框
     document.getElementById('peakLoadCard').innerHTML = '<h2>🔥 历史最高精神负荷（Top 5 Days）</h2><div style="color: #6b7280; padding: 20px; text-align: center;">[ 历史轨迹正在持续监测中 ]</div>';
-    document.getElementById('monitorCard').innerHTML = `<h2>🌐 核心监视阵地 Top 10</h2><div class="rank"><span>#1 https://12168.yilink.uk/</span><b>${currentVisits} 次</b></div><div style="color: #6b7280; padding: 15px; text-align: center;">[ 其余阵地节点正在持续监测中 ]</div>`;
+    document.getElementById('monitorCard').innerHTML = '<h2>🌐 核心监视阵地 Top 10</h2><div style="color: #6b7280; padding: 20px; text-align: center;">[ 阵地节点正在持续监测中 ]</div>';
     document.getElementById('interestCard').innerHTML = '<h2>🔤 禁忌兴趣图谱</h2><div style="color: #6b7280; padding: 20px; text-align: center;">[ 兴趣图谱正在持续监测中 ]</div>';
 
     // 抓取真实设备参数填充时间线方框（改为宿主现实时区）
@@ -1242,14 +1172,12 @@ function resetMemory() {
     localStorage.removeItem('mnemosyne_status');
     localStorage.removeItem('mnemosyne_locked_visits');
     localStorage.removeItem('mnemosyne_start_date');
-    localStorage.removeItem('mnemosyne_prompt_dismissed');
-    localStorage.removeItem('mnemosyne_expire_time');
     alert("记忆已强制格式化。系统正在恢复初始纯净状态...");
     location.reload();
 }
 
 // ==========================================
-// 静止惩罚 (Idle Staring Effect) - 40秒 (无音效)
+// 静止惩罚 (Idle Staring Effect) - 40秒
 // ==========================================
 let idleTimer;
 const staringOverlay = document.getElementById('staringOverlay');
@@ -1268,6 +1196,7 @@ function resetIdleTimer() {
     idleTimer = setTimeout(() => {
         document.getElementById('staringText').innerText = staringTexts[Math.floor(Math.random() * staringTexts.length)];
         staringOverlay.style.display = 'flex';
+        playCreepyTone();
     }, 40000); 
 }
 
@@ -1340,23 +1269,14 @@ function closeMinimalModal() {
 }
 
 // ==========================================
-// 触发格式化确认弹窗
+// 触发格式化并设为感染态 (infected)
 // ==========================================
 function triggerMemoryWipe() {
-    document.getElementById('confirmModal').style.display = 'flex';
-}
-
-function closeConfirmModal() {
-    document.getElementById('confirmModal').style.display = 'none';
-}
-
-function confirmMemoryWipe() {
-    closeConfirmModal();
-    playCreepyTone(); // 仅在确认执行时触发音效
+    playCreepyTone();
     document.getElementById('memoryWipeScreen').style.display = 'flex';
     setTimeout(() => {
         enterTheVoid();
-    }, 1550); // 停留时间 1.55s
+    }, 1500); 
 }
 
 function enterTheVoid() {
@@ -1479,37 +1399,15 @@ new Chart(document.getElementById('doughnutChart'), {
         cutout: '70%',
         plugins: {
             legend: {
-                position: 'right',
-                labels: { color: '#cca300', font: { size: 12, family: 'Courier New' }, boxWidth: 10, padding: 12 },
-                onClick: function(e, legendItem, legend) {
-                    const index = legendItem.index;
-                    const chart = legend.chart;
-
-                    // 官方手动切换可见性写法
-                    chart.toggleDataVisibility(index);
-                    chart.update();
-                    
-                    // 检查是否所有扇区都被隐藏
-                    let allHidden = true;
-                    for (let i = 0; i < chart.data.labels.length; i++) {
-                        if (chart.getDataVisibility(i) === true) {
-                            allHidden = false;
-                            break;
-                        }
-                    }
-                    
-                    const helloEl = document.getElementById('doughnutHello');
-                    if (helloEl) {
-                        helloEl.style.display = allHidden ? 'flex' : 'none';
-                    }
-                }
+                position: window.innerWidth >= 768 ? 'bottom' : 'right',
+                labels: { color: '#cca300', font: { size: window.innerWidth >= 768 ? 11 : 12, family: 'Courier New' }, boxWidth: 10, padding: window.innerWidth >= 768 ? 10 : 12 }
             }
         }
     }
 });
 
 // ==========================================
-// 隐藏结局：发现线索 -> 强行上滑 -> 僵硬倒流 -> 真实 404 (无音效)
+// 隐藏结局：发现线索 -> 强行上滑 -> 僵硬倒流 -> 真实 404
 // ==========================================
 function triggerRunEnding() {
     clearTimeout(idleTimer);
@@ -1531,6 +1429,7 @@ function triggerRunEnding() {
     }, 30);
 
     document.body.classList.add('ending-alert-red');
+    playCreepyTone(); 
     
     setTimeout(() => {
         document.body.classList.remove('ending-alert-red');
