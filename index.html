@@ -1132,7 +1132,7 @@ document.addEventListener('copy', (e) => {
 });
 
 // ==========================================
-// 2. 真实时间差感知 (Time-Gap Awareness)
+// 2. 真实时间差感知 (Time-Gap Awareness) / 横幅渲染
 // ==========================================
 const lastVisit = localStorage.getItem('mnemosyne_last_visit');
 const now = new Date().getTime();
@@ -1151,8 +1151,9 @@ const creepyBanners = [
     "⚠️ 警报：检测到您的心跳频率与本地终端的散热风扇正逐渐趋于同频."
 ];
 
-document.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('mnemosyne_status')) return;
+// 修复 Bug：移除 DOMContentLoaded 等待，防止刷新过快导致事件丢失
+// 保持刻意设计：只要触发了任何结局状态（无论是 infected 还是 locked），都不显示横幅
+if (!localStorage.getItem('mnemosyne_status')) {
     const banner = document.getElementById('pollutionBanner');
     let bannerText = creepyBanners[Math.floor(Math.random() * creepyBanners.length)];
 
@@ -1172,7 +1173,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     banner.innerText = bannerText;
     banner.style.display = 'block';
-});
+}
 
 // ==========================================
 // 3. 机制一：幽灵共读者 (Phantom Highlight)
